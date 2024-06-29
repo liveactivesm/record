@@ -9,9 +9,14 @@
     <h1>Audio Recording and Transcription</h1>
 
     <button id="recordButton">Start Recording</button>
-    <button id="stopButton">Stop Recording</button>
+    <button id="stopButton" style="display: none;">Stop Recording</button>
+    <button id="playButton" style="display: none;">Play Recording</button>
     <p id="recordingStatus"></p>
     <p id="transcriptionResult"></p>
     <p id="summaryResult"></p>
 
-    <scri
+    <audio id="audioPlayer" controls></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
