@@ -1,10 +1,8 @@
 // script.js
 
-// Global variables
 let mediaRecorder;
 let recordedChunks = [];
 
-// Function to start recording
 async function startRecording() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -14,7 +12,17 @@ async function startRecording() {
             recordedChunks.push(event.data);
         };
 
+        mediaRecorder.onstart = function() {
+            document.getElementById('recordingStatus').innerText = 'Recording...';
+            document.getElementById('recordButton').style.display = 'none';
+            document.getElementById('stopButton').style.display = 'inline-block';
+        };
+
         mediaRecorder.onstop = async function() {
+            document.getElementById('recordingStatus').innerText = 'Recording stopped.';
+            document.getElementById('recordButton').style.display = 'inline-block';
+            document.getElementById('stopButton').style.display = 'none';
+
             const audioBlob = new Blob(recordedChunks, { type: 'audio/wav' });
             recordedChunks = [];
 
@@ -29,7 +37,6 @@ async function startRecording() {
     }
 }
 
-// Function to stop recording
 function stopRecording() {
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
@@ -37,9 +44,8 @@ function stopRecording() {
     }
 }
 
-// Function to send audio to Assembly AI for transcription
 async function sendToAssemblyAI(audioBlob) {
-    const apiKey = '7ee7fb879f664375ab8ce7fa2a17ca67';
+    const apiKey = 'abcdef1234567890'; // Replace with your actual Assembly AI API key
     const apiUrl = 'https://api.assemblyai.com/v2/transcript';
 
     const formData = new FormData();
@@ -71,13 +77,6 @@ async function sendToAssemblyAI(audioBlob) {
     }
 }
 
-// Event listener for record button click
-document.getElementById('recordButton').addEventListener('click', () => {
-    startRecording();
-});
-
-// Event listener for stop button click (optional)
-// You can add a stop button if needed
-// document.getElementById('stopButton').addEventListener('click', () => {
-//     stopRecording();
-// });
+// Event listeners
+document.getElementById('recordButton').addEventListener('click', startRecording);
+document.getElementById('stopButton').addEventListener('click', stopRecording);
