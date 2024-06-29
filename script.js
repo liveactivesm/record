@@ -78,5 +78,4 @@ async function sendToAssemblyAI(audioBlob) {
 }
 
 // Event listeners
-document.getElementById('recordButton').addEventListener('click', startRecording);
-document.getElementById('stopButton').addEventListener('click', stopRecording);
+document.getElementById('recordButton').ad
