@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blob = new Blob(chunks, { type: 'audio/wav' }); // Adjust as per your chosen format
                 const audioUrl = URL.createObjectURL(blob);
                 audioElement.src = audioUrl;
-                // Now you can send `blob` to ChatGPT API for transcription
-                // Implement the next steps here (transcription, summarization, etc.)
+                // Optionally, you can send `blob` to ChatGPT API for transcription here
+                // Implement the next steps as needed (transcription, summarization, etc.)
             };
             mediaRecorder.start();
             recordingStatus.textContent = 'Recording...';
