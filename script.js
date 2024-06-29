@@ -2,6 +2,7 @@
 
 let mediaRecorder;
 let recordedChunks = [];
+let audioPlayer = document.getElementById('audioPlayer');
 
 async function startRecording() {
     try {
@@ -18,16 +19,18 @@ async function startRecording() {
             document.getElementById('stopButton').style.display = 'inline-block';
         };
 
-        mediaRecorder.onstop = async function() {
+        mediaRecorder.onstop = function() {
             document.getElementById('recordingStatus').innerText = 'Recording stopped.';
             document.getElementById('recordButton').style.display = 'inline-block';
             document.getElementById('stopButton').style.display = 'none';
+            document.getElementById('playButton').style.display = 'inline-block';
 
             const audioBlob = new Blob(recordedChunks, { type: 'audio/wav' });
             recordedChunks = [];
 
-            // Send recorded audio to Assembly AI for transcription
-            await sendToAssemblyAI(audioBlob);
+            // Set audio player source to recorded audio
+            audioPlayer.src = URL.createObjectURL(audioBlob);
+            audioPlayer.controls = true;
         };
 
         mediaRecorder.start();
@@ -44,38 +47,14 @@ function stopRecording() {
     }
 }
 
-async function sendToAssemblyAI(audioBlob) {
-    const apiKey = '7ee7fb879f664375ab8ce7fa2a17ca67'; // Replace with your actual Assembly AI API key
-    const apiUrl = 'https://api.assemblyai.com/v2/transcript';
-
-    const formData = new FormData();
-    formData.append('audio', audioBlob);
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': apiKey,
-            },
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error('Error from Assembly AI');
-        }
-
-        const data = await response.json();
-        console.log('Transcription:', data.text);
-        console.log('Summary:', data.summary);
-
-        // Display transcription and summary results on the webpage
-        document.getElementById('transcriptionResult').innerText = `Transcription: ${data.text}`;
-        document.getElementById('summaryResult').innerText = `Summary: ${data.summary}`;
-
-    } catch (error) {
-        console.error('Error:', error);
+function playRecording() {
+    if (audioPlayer.src) {
+        audioPlayer.play();
+        console.log('Playing recording...');
     }
 }
 
 // Event listeners
-document.getElementById('recordButton').ad
+document.getElementById('recordButton').addEventListener('click', startRecording);
+document.getElementById('stopButton').addEventListener('click', stopRecording);
+document.getElementById('playButton').addEventListener('click', playRecording);
