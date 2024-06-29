@@ -1,9 +1,10 @@
-// script.js
-
 let mediaRecorder;
 let recordedChunks = [];
 let audioPlayer = document.getElementById('audioPlayer');
+const apiKey = 'your_assembly_ai_api_key'; // Replace with your actual Assembly AI API key
+const apiUrl = 'https://api.assemblyai.com/v2/transcript';
 
+// Function to start recording
 async function startRecording() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -19,7 +20,7 @@ async function startRecording() {
             document.getElementById('stopButton').style.display = 'inline-block';
         };
 
-        mediaRecorder.onstop = function() {
+        mediaRecorder.onstop = async function() {
             document.getElementById('recordingStatus').innerText = 'Recording stopped.';
             document.getElementById('recordButton').style.display = 'inline-block';
             document.getElementById('stopButton').style.display = 'none';
@@ -28,9 +29,8 @@ async function startRecording() {
             const audioBlob = new Blob(recordedChunks, { type: 'audio/wav' });
             recordedChunks = [];
 
-            // Set audio player source to recorded audio
-            audioPlayer.src = URL.createObjectURL(audioBlob);
-            audioPlayer.controls = true;
+            // Send recorded audio to Assembly AI for transcription
+            await sendToAssemblyAI(audioBlob);
         };
 
         mediaRecorder.start();
@@ -40,6 +40,7 @@ async function startRecording() {
     }
 }
 
+// Function to stop recording
 function stopRecording() {
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
@@ -47,10 +48,42 @@ function stopRecording() {
     }
 }
 
+// Function to play recorded audio
 function playRecording() {
     if (audioPlayer.src) {
         audioPlayer.play();
         console.log('Playing recording...');
+    }
+}
+
+// Function to send recorded audio to Assembly AI for transcription
+async function sendToAssemblyAI(audioBlob) {
+    const formData = new FormData();
+    formData.append('audio', audioBlob);
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': apiKey,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error('Error from Assembly AI');
+        }
+
+        const data = await response.json();
+        console.log('Transcription:', data.text);
+        console.log('Summary:', data.summary);
+
+        // Display transcription and summary results on the webpage
+        document.getElementById('transcriptionResult').innerText = `Transcription: ${data.text}`;
+        document.getElementById('summaryResult').innerText = `Summary: ${data.summary}`;
+
+    } catch (error) {
+        console.error('Error sending to Assembly AI:', error);
     }
 }
 
