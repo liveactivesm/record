@@ -45,7 +45,7 @@ function stopRecording() {
 }
 
 async function sendToAssemblyAI(audioBlob) {
-    const apiKey = 'abcdef1234567890'; // Replace with your actual Assembly AI API key
+    const apiKey = '7ee7fb879f664375ab8ce7fa2a17ca67'; // Replace with your actual Assembly AI API key
     const apiUrl = 'https://api.assemblyai.com/v2/transcript';
 
     const formData = new FormData();
