@@ -7,34 +7,10 @@
 </head>
 <body>
     <h1>Audio Recording Page</h1>
-    <button id="recordButton">Record</button>
+    <button id="recordButton">Start Recording</button>
+    <button id="stopButton" style="display:none;">Stop Recording</button>
+    <p id="recordingStatus"></p>
     <audio id="audioElement" controls></audio>
-    <script>
-    const recordButton = document.getElementById('recordButton');
-    const audioElement = document.getElementById('audioElement');
-    let mediaRecorder;
-    let chunks = [];
-
-    recordButton.addEventListener('click', async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = (event) => {
-                chunks.push(event.data);
-            };
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'audio/wav' }); // Adjust as per your chosen format
-                const audioUrl = URL.createObjectURL(blob);
-                audioElement.src = audioUrl;
-                // Now you can send `blob` to ChatGPT API for transcription
-                // Implement the next steps here (transcription, summarization, etc.)
-            };
-            mediaRecorder.start();
-            console.log('Recording started...');
-        } catch (error) {
-            console.error('Error accessing microphone:', error);
-        }
-    });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
