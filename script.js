@@ -1,7 +1,7 @@
 let mediaRecorder;
 let recordedChunks = [];
 let audioPlayer = document.getElementById('audioPlayer');
-const apiKey = 'your_assembly_ai_api_key'; // Replace with your actual Assembly AI API key
+const apiKey = '7ee7fb879f664375ab8ce7fa2a17ca67'; // Replace with your actual Assembly AI API key
 const apiUrl = 'https://api.assemblyai.com/v2/transcript';
 
 // Function to start recording
