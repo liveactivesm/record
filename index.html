@@ -17,41 +17,6 @@
 
     <audio id="audioPlayer" controls></audio>
 
-    <script>
-        let mediaRecorder;
-        let recordedChunks = [];
-        let audioPlayer = document.getElementById('audioPlayer');
-        const apiKey = 'your_assembly_ai_api_key'; // Replace with your actual Assembly AI API key
-        const apiUrl = 'https://api.assemblyai.com/v2/transcript';
-
-        // Function to start recording
-        async function startRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-
-                mediaRecorder.ondataavailable = function(event) {
-                    recordedChunks.push(event.data);
-                };
-
-                mediaRecorder.onstart = function() {
-                    document.getElementById('recordingStatus').innerText = 'Recording...';
-                    document.getElementById('recordButton').style.display = 'none';
-                    document.getElementById('stopButton').style.display = 'inline-block';
-                };
-
-                mediaRecorder.onstop = async function() {
-                    document.getElementById('recordingStatus').innerText = 'Recording stopped.';
-                    document.getElementById('recordButton').style.display = 'inline-block';
-                    document.getElementById('stopButton').style.display = 'none';
-                    document.getElementById('playButton').style.display = 'inline-block';
-
-                    const audioBlob = new Blob(recordedChunks, { type: 'audio/wav' });
-                    recordedChunks = [];
-
-                    // Send recorded audio to Assembly AI for transcription
-                    await sendToAssemblyAI(audioBlob);
-                };
-
-                mediaRecorder.start();
-                console.log('Recor
+    <script src="script.js"></script>
+</body>
+</html>
